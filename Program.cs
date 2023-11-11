@@ -9,7 +9,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<WheemContext>();
-builder.Services.AddScoped<IArticleService, ArticleService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
@@ -20,24 +20,24 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-app.MapGet("/articles", async (IArticleService service) => await service.GetAll())
-	.WithName("GetArticles")
+app.MapGet("/products", async (IProductService service) => await service.GetAll())
+	.WithName("GetProducts")
 	.WithOpenApi();
 
-app.MapGet("/articles/{id}", async (IArticleService service, int id) => await service.GetOne(id))
-	.WithName("GetArticle")
+app.MapGet("/products/{id}", async (IProductService service, int id) => await service.GetOne(id))
+	.WithName("GetProduct")
 	.WithOpenApi();
 
-app.MapPost("/articles", async (IArticleService service, Article article) => await service.Create(article))
-	.WithName("AddArticle")
+app.MapPost("/products", async (IProductService service, Product product) => await service.Create(product))
+	.WithName("AddProduct")
 	.WithOpenApi();
 
-app.MapPut("/articles/{id}", async (IArticleService service, int id, Article article) => await service.Update(id, article))
-	.WithName("UpdateArticle")
+app.MapPut("/products/{id}", async (IProductService service, int id, Product product) => await service.Update(id, product))
+	.WithName("UpdateProduct")
 	.WithOpenApi();
 
-app.MapDelete("/articles/{id}", async (IArticleService service, int id) => await service.Delete(id))
-	.WithName("DeleteArticle")
+app.MapDelete("/products/{id}", async (IProductService service, int id) => await service.Delete(id))
+	.WithName("DeleteProduct")
 	.WithOpenApi();
 
 app.Run();
