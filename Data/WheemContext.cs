@@ -1,10 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Wheem.Models;
 
-public class WheemContext : DbContext
+namespace Wheem.Data
 {
-	public string DbPath { get; }
-	public DbSet<Article> Articles { get; set; }
+	public class WheemContext : DbContext
+	{
+		public string DbPath { get; }
+		public DbSet<Article> Articles { get; set; }
 
 	public WheemContext()
 	{
@@ -18,5 +20,6 @@ public class WheemContext : DbContext
 	{
 		base.OnModelCreating(modelBuilder);
 		modelBuilder.Entity<Article>().HasIndex(article => article.Link).IsUnique();
+		}
 	}
 }
