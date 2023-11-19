@@ -12,9 +12,9 @@ namespace Wheem.Models
 	public class Product(int Id, string Label, double Price, string Link, string? Image = null)
 	{
 		public int Id { get; set; } = Id;
-		public string Label { get; set; } = Label;
-		public double Price { get; set; } = Price;
-		public string Link { get; set; } = Link;
+		public required string Label { get; set; } = Label;
+		public required double Price { get; set; } = Price;
+		public required string Link { get; set; } = Link;
 		public string? Image { get; set; } = Image;
 		public override string ToString() => $"Product {Id}: {Label} (${Price})";
 	}

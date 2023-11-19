@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Identity;
 using Wheem.Data;
-using Wheem.Models;
 using Wheem.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,8 +8,16 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+	.AddIdentityCookies();
+builder.Services.AddAuthorizationBuilder();
+
 builder.Services.AddDbContext<WheemContext>();
 builder.Services.AddScoped<IProductService, ProductService>();
+
+builder.Services.AddIdentityCore<IdentityUser>()
+	.AddEntityFrameworkStores<WheemContext>()
+	.AddApiEndpoints();
 
 var app = builder.Build();
 
@@ -20,24 +28,16 @@ if (app.Environment.IsDevelopment())
 	app.UseSwaggerUI();
 }
 
-app.MapGet("/products", async (IProductService service) => await service.GetAll())
-	.WithName("GetProducts")
-	.WithOpenApi();
+// app.UseHttpsRedirection();
 
-app.MapGet("/products/{id}", async (IProductService service, int id) => await service.GetOne(id))
-	.WithName("GetProduct")
-	.WithOpenApi();
+app.MapGroup("/idy")
+	.MapIdentityApi<IdentityUser>()
+	.WithTags("Identity");
 
-app.MapPost("/products", async (IProductService service, Product product) => await service.Create(product))
-	.WithName("AddProduct")
-	.WithOpenApi();
-
-app.MapPut("/products/{id}", async (IProductService service, int id, Product product) => await service.Update(id, product))
-	.WithName("UpdateProduct")
-	.WithOpenApi();
-
-app.MapDelete("/products/{id}", async (IProductService service, int id) => await service.Delete(id))
-	.WithName("DeleteProduct")
+app.MapGroup("/api/products")
+	.MapProductApi()
+	.RequireAuthorization()
+	.WithTags("Products")
 	.WithOpenApi();
 
 app.Run();
